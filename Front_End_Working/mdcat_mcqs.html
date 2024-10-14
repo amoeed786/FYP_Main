@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDCat Prompt</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #eef2f3;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 100px;
+            text-align: center;
+        }
+        .prompt-box {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .submit-btn {
+            width: 200px;
+            font-size: 18px;
+            background-color: #00b894;
+            border: none;
+        }
+        .submit-btn:hover {
+            background-color: #019875;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Enter Your MDCat Prompt</h2>
+        <p>Type the topic or subject you want to take a quiz on.</p>
+        <textarea id="userPrompt" class="prompt-box" placeholder="Type your topic here..."></textarea>
+        <br>
+        <button class="btn btn-primary submit-btn" onclick="submitPrompt()">Generate Quiz</button>
+    </div>
+
+    <script>
+        function submitPrompt() {
+            const prompt = document.getElementById('userPrompt').value;
+            if (prompt.trim() === '') {
+                alert('Please enter a prompt!');
+                return;
+            }
+            localStorage.setItem('mdcatPrompt', prompt);
+            window.location.href = 'generated_quiz.html';
+        }
+    </script>
+
+</body>
+</html>

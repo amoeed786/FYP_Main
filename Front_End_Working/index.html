@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Role</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .role-selection {
+            text-align: center;
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .role-selection h1 {
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        .role-card {
+            transition: transform 0.2s ease;
+        }
+        .role-card:hover {
+            transform: scale(1.05);
+        }
+        .role-card img {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        .role-card h3 {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="role-selection">
+        <h1>Select Your Role</h1>
+        <div class="d-flex justify-content-center">
+            <div class="role-card mx-4">
+                <a href="signin.html">
+                    <img src="https://img.icons8.com/color/100/000000/student-male.png" alt="Student Icon">
+                    <h3>Student</h3>
+                </a>
+            </div>
+            <div class="role-card mx-4">
+                <a href="signin.html">
+                    <img src="https://img.icons8.com/color/100/000000/teacher.png" alt="Teacher Icon">
+                    <h3>Teacher</h3>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
