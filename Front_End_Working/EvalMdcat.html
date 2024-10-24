@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDCAT Quiz Evaluation</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #00b894, #00b894, #00cec9);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 100px;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Your MDCAT Quiz Evaluation</h2>
+    <div id="feedback"></div>
+    <button class="btn btn-primary" onclick="goBack()">Take Another Quiz</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = 'mdcat_prompt.html'; // Change to your MDCAT prompt page
+    }
+
+    // Display feedback from localStorage
+    const feedback = JSON.parse(localStorage.getItem('mdcatFeedback'));
+    const feedbackDiv = document.getElementById('feedback');
+    
+    if (feedback) {
+        feedback.forEach(line => {
+            const p = document.createElement('p');
+            p.textContent = line;
+            feedbackDiv.appendChild(p);
+        });
+    } else {
+        feedbackDiv.textContent = 'No feedback available.';
+    }
+</script>
+
+</body>
+</html>

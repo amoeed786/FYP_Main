@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Course</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Your custom styles -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+  
+<nav class="navbar">
+    <div class="menu-icon" id="menuIcon">
+        <span>&#9776;</span>
+    </div>
+    <div class="profile-icon">
+        <img src="https://img.icons8.com/ios-filled/50/000000/user.png" alt="Profile">
+    </div>
+</nav>
+
+<!-- Side Navigation Bar -->
+<div id="sideNav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" id="closeBtn">&times;</a>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Features</a>
+    <a href="#">Settings</a>
+</div>
+
+
+
+<!-- Main Content -->
+<section class="container mt-5 text-center">
+    <h1>Make a Choice!!</h1>
+
+    <div class="course-selection">
+        <!-- Computer Courses Block -->
+        <div class="course-block">
+            <div class="card">
+                <div class="card-header computer-header">
+                    <h4>Computer Courses</h4>
+                </div>
+                <div class="card-body">
+                    <img src="https://img.icons8.com/color/100/000000/computer.png" alt="Computer Courses" />
+                    <p>Enroll in our comprehensive computer courses and enhance your skills!</p>
+                    <a href="Computerprompt_quiz.html" class="btn explore-btn">Generate Quiz</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- MDCAT Preparation Block -->
+        <div class="course-block">
+            <div class="card">
+                <div class="card-header mdcat-header">
+                    <h4>MDCAT Preparation</h4>
+                </div>
+                <div class="card-body">
+                    <img src="https://img.icons8.com/color/100/000000/exam.png" alt="MDCAT Preparation" />
+                    <p>Prepare for the MDCAT with our specialized resources and practice tests!</p>
+                    <a href="MDCATprompt.html" class="btn explore-btn">Generate Quiz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>// Open the side navigation
+    document.getElementById("menuIcon").onclick = function () {
+        document.getElementById("sideNav").style.width = "250px";
+    };
+    
+    // Close the side navigation
+    document.getElementById("closeBtn").onclick = function () {
+        document.getElementById("sideNav").style.width = "0";
+    };
+    </script>
+
+</body>
+</html>
+ 

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDCAT Quiz Prompt</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+         body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            border: 1px solid #09456e;
+        }
+        .logo h1 {
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .menu-icon {
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+            align-items: left;
+        }
+
+        .profile-icon img {
+            width: 40px;
+            cursor: pointer;
+        }
+
+        /* Side Navigation */
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 101;
+            top: 0;
+            left: 0;
+            background-color: #003b49;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 22px;
+            color: #fff;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: #0dcaf0;
+            color: black;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+
+        .container {
+            max-width: 900px;
+            margin-top: 170px;
+            text-align: center;
+            background-color: #ffffff; /* White background for prompt box */
+            padding: 50px;
+            border-radius: 10px;
+            border: 3px solid #09456e;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            
+        }
+
+        h2{
+            font-weight: bold;
+            font-size: 28px;
+        }
+        .prompt-box {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            
+        }
+        .submit-btn {
+            width: 200px;
+            font-size: 18px;
+            background-color: #28a745; /* Green scheme for MDCAT */
+            border: none;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="menu-icon" id="menuIcon">
+            <span>&#9776;</span>
+        </div>
+        <div class="profile-icon">
+            <img src="https://img.icons8.com/ios-filled/50/000000/user.png" alt="Profile">
+        </div>
+    </nav>
+    
+    <!-- Side Navigation Bar -->
+    <div id="sideNav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" id="closeBtn">&times;</a>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Features</a>
+        <a href="#">Settings</a>
+    </div>
+
+    <div class="container">
+        <h2>Enter Your MDCAT Quiz Prompt</h2>
+        <p>Type the topic or subject you want to take a quiz on.</p>
+        <textarea id="mdcatPrompt" class="prompt-box" placeholder="Type your topic here..."></textarea>
+        <br>
+        <!-- Only MCQ choice for MDCAT -->
+        <label><input type="radio" name="questionType" value="mcq" checked> Multiple Choice Questions</label><br><br>
+        <button class="btn btn-primary submit-btn" onclick="submitMdcatPrompt()">Generate Quiz</button>
+    </div>
+
+    <script>
+        function submitMdcatPrompt() {
+            const prompt = document.getElementById('mdcatPrompt').value;
+            const questionType = document.querySelector('input[name="questionType"]:checked').value;
+            if (prompt.trim() === '') {
+                alert('Please enter a prompt!');
+                return;
+            }
+            localStorage.setItem('mdcatPrompt', prompt);
+            localStorage.setItem('questionType', questionType);
+            window.location.href = 'MDCATQuizgen.html';
+        }
+    </script>
+
+</body>
+</html>

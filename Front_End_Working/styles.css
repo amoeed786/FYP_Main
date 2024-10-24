@@ -1,0 +1,186 @@
+/* General styles */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar Styles */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    border: 1px solid #09456e;
+}
+
+.logo h1 {
+    color: #fff;
+    font-size: 24px;
+}
+
+.menu-icon {
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    align-items: left;
+}
+
+.profile-icon img {
+    width: 40px;
+    cursor: pointer;
+}
+
+/* Side Navigation */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    left: 0;
+    background-color: #003b49;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 22px;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    background-color: #0dcaf0;
+    color: black;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* General Page Styles */
+body {
+    background-color: #f5f8fa;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+    font-size: 36px;
+    padding: 100px  0px;
+    justify-content: center;
+    text-align: center;
+}
+
+
+/* Course Selection Container */
+.course-selection {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 2px;
+    padding: 20px;
+}
+
+.course-block {
+    flex: 1;
+    max-width: 350px;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border: 3px solid #09456e;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Headers for Cards */
+.computer-header {
+    background-color: #4A90E2;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 30px 0;
+}
+
+.mdcat-header {
+    background-color: #28a745;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 30px 0;
+}
+
+/* Card Body Styling */
+.card-body {
+    padding: 20px;
+}
+
+.card-body img {
+    margin-bottom: 15px;
+}
+
+.card-body p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Button Styling */
+.explore-btn {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.explore-btn:hover {
+    background-color: #357ABD;
+}
+
+.explore-btn:active {
+    background-color: #285D91;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .course-selection {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .course-block {
+        max-width: 100%;
+    }
+}
