@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Quiz</title>
+  <link rel="stylesheet" href="quiz-styles.css">
+  <!-- You can add an icon library like FontAwesome to use a download icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>TOPIC: <span id="topicNameDisplay"></span></h1>
+    <div class="download-icon">
+        <a href="#" id="download-btn">
+          <i class="fas fa-download"></i> 
+        </a>
+     
+
+    <div id="quizPaper">
+      
+    </div>
+
+    <!-- Submit Button for submitting the quiz -->
+    <br>
+    <button id="submit-btn">Submit Quiz</button>
+  </div>
+
+  <div id="formatModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2>Select Download Format</h2>
+      <button class="format-option" id="download-txt">TXT</button>
+      <button class="format-option" id="download-doc">DOC</button>
+      <button class="format-option" id="download-pdf">PDF</button>
+    </div>
+  </div>
+
+  <script src="quiz.js"></script>
+</body>
+</html> 
