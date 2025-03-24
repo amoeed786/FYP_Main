@@ -1,0 +1,181 @@
+/* Ensure body and html take full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Body content (quiz, etc.) */
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;  /* Allow scrolling for the entire page */
+  }
+  
+  /* Quiz container (now it's part of the page flow) */
+  .quiz-container {
+    position: relative;
+    width: 80%;
+    max-width:none;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 20px;  /* Make sure to have space at the bottom */
+    flex-grow: 1;  /* This makes the container flexible */
+  }
+  
+  /* Header styling */
+  .quiz-container h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-align: center;
+    color: #333;
+  }
+
+  #quizPaper{
+    background: #fefdf9;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.0);
+  }
+  
+  /* Styling for question blocks */
+  .question-block {
+    margin-bottom: 20px;
+  }
+  
+  .question {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .options {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .options li {
+    margin-bottom: 8px;
+  }
+  .options li:hover{
+    background-color: #e6e6e6;
+    width: 30%;
+
+  }
+  
+  /* Textarea styling for short answer questions */
+  textarea {
+    width: 98%;
+    font-size: 16px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: #000000;
+  }
+  
+  /* Styling for download button */
+ #download-btn {
+    position: absolute; /* Absolute to position relative to the container */
+    top: 10px;
+    right: 10px;
+    font-size: 24px; /* Icon size */
+    z-index: 10; /* Ensure it appears on top */
+    
+  }
+  
+  #download-btn i{
+    color: #000000; /* Icon color */
+    text-decoration: none;
+    
+  }
+  
+  #download-btn i:hover {
+    background-color: #e9efe9;
+  }
+  
+  /* Submit button styling */
+  #submit-btn {
+    display: block;
+    width: 50%;
+    padding: 10px 0px;
+    background-color: #245F73;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin: auto; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  
+  #submit-btn:hover {
+    background-color: #2b6f86;
+  }
+  
+  /* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* Above other elements */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 40%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close:hover {
+    color: #000;
+  }
+  
+  .format-option {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #245F73;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .format-option:hover {
+    background-color: #2b6f86;
+  }
+  

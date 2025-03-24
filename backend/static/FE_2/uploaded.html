@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Viewer</title>
+  <link rel="stylesheet" href="uploaded-styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar for Table of Contents -->
+    <div class="sidebar">
+      <h2>Table of Contents</h2>
+      <ul id="toc">
+        <!-- Dynamic TOC Items -->
+      </ul>
+    </div>
+
+    <!-- Chatbox in the center -->
+    <div class="chat-container">
+      <div class="chat-header">
+        <h2>Ask Anything</h2>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <!-- Chat messages will appear here -->
+      </div>
+      <div class="chat-footer">
+        <input type="text" id="userInput" placeholder="Type your message..." />
+        <button id="sendBtn">Send</button>
+        <button id="generateQuizBtn">Generate Quiz</button> <!-- New Button -->
+      </div>
+    </div>
+  </div>
+  <script src="uploaded.js"></script>
+</body>
+</html>

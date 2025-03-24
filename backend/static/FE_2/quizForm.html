@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Quiz</title>
+  <link rel="stylesheet" href="quizForm-styles.css">
+</head>
+<body>
+     <!-- Fixed Tab -->
+  <div class="fixed-tab">
+    <div class="tab-left">
+      <div class="hamburger-menu">&#9776;</div>
+    </div>
+    <div class="tab-center">
+    </div>
+    <div class="tab-right">
+      <input type="text" class="search-bar" placeholder="Search..." />
+      <i class="fas fa-sign-in-alt"></i>
+    </div>
+  </div>
+
+  
+  <div class="quiz-form-container">
+    <h2>Generate a Quiz</h2>
+    <form id="quizForm">
+      <div class="input-group">
+        <label for="numMCQs">Number of MCQs:</label>
+        <input type="number" id="numMCQs" name="numMCQs" min="1" required>
+      </div>
+
+      <div class="input-group">
+        <label for="numShortQs">Number of Short Questions:</label>
+        <input type="number" id="numShortQs" name="numShortQs" min="1" required>
+      </div>
+
+      <div class="input-group">
+        <label for="topicName">Topic Name:</label>
+        <br>
+        <input type="text" id="topicName" name="topicName" required>
+      </div>
+
+      <button type="submit">Generate Quiz</button>
+    </form>
+  </div>
+
+  <script src="quizForm.js"></script>
+</body>
+</html>
