@@ -1,0 +1,29 @@
+name: Notify on Push
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Email Notification
+        uses: mattieha/send-email@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "🔔 GitHub Push to ${{ github.ref_name }}"
+          to: ${{ secrets.TO_EMAIL }}
+          from: ${{ secrets.MAIL_USERNAME }}
+          body: |
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.event.head_commit.message }}
+            Author: ${{ github.actor }}
+
+            View on GitHub:
+            https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}
