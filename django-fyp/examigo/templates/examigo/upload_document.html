@@ -1,0 +1,83 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Upload Document{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Upload Document</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Document Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Give your document a descriptive title</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.file.id_for_label }}" class="form-label">Upload File</label>
+                        <div class="input-group">
+                            {{ form.file }}
+                        </div>
+                        {% if form.file.errors %}
+                            <div class="text-danger">
+                                {% for error in form.file.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Upload PDF documents, textbooks or study materials</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Upload Document</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4 shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Document Guidelines</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0">
+                    <li>For best results, upload clearly formatted PDF documents</li>
+                    <li>Make sure text in the document is selectable/searchable</li>
+                    <li>Documents with clear headings and sections work best for quiz generation</li>
+                    <li>Maximum file size: 10MB</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap form classes to Django form inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('{{ form.title.id_for_label }}');
+        if (titleInput) {
+            titleInput.classList.add('form-control');
+        }
+        
+        const fileInput = document.getElementById('{{ form.file.id_for_label }}');
+        if (fileInput) {
+            fileInput.classList.add('form-control');
+        }
+    });
+</script>
+{% endblock %}
