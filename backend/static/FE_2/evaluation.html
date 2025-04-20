@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz Evaluation</title>
+  <link rel="stylesheet" href="evaluation.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>🧾 Quiz Evaluation</h1>
+
+    <div class="score-box">
+      <p>Total Marks: <span id="total-marks">--</span></p>
+      <p>Obtained Marks: <span id="obtained-marks">--</span></p>
+      <p>Percentage: <span id="percentage">--</span></p>
+    </div>
+
+    <div class="feedback" id="feedback">Getting AI Feedback... 🤖</div>
+
+    <canvas id="resultChart" width="300" height="300"></canvas>
+
+    <div class="buttons">
+     
+      <button onclick="location.href='quiz.html'">🔁 Retry</button>
+    </div>
+  </div>
+  <div class="evaluation-animation">
+    <dotlottie-player 
+      src="https://lottie.host/cb6992b9-8039-4049-83f4-006cfd2eb4de/0tAqxwKnLR.lottie" 
+      background="transparent" 
+      speed="1" 
+      style="width: 400px; height: 400px;" 
+      loop 
+      autoplay>
+    </dotlottie-player>
+  </div>
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+
+  <script src="evaluation.js"></script>
+</body>
+</html>
