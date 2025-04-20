@@ -1,0 +1,101 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  .background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://www.transparenttextures.com/patterns/geometry2.png');
+    opacity: 0.1;
+    z-index: -1;
+  }
+  
+  .container {
+    
+    padding: 2.5rem 4rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+    text-align: center;
+    animation: fadeIn 1s ease;
+    margin: 50px auto;
+
+  }
+  
+  
+  h1 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .score-box {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+  }
+  
+  .feedback {
+    margin-top: 2rem;
+    padding: 1.2rem;
+    font-size: 1rem;
+    text-align: left;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  canvas {
+    margin-top: 1rem;
+  }
+  
+  .buttons {
+    margin-top: 2rem;
+  }
+  
+  button {
+    margin: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6EE7B7, #3B82F6);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+  
+  .evaluation-animation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}

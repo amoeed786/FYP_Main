@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExAmigo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+
+
+    <!-- Custom CSS -->
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            
+            background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+            
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            
+        }
+
+        .navbar .nav-links li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+            padding: 8px 16px;
+        }
+
+        .navbar .nav-links li a:hover {
+            color: rgba(217, 208, 208, 0.7)
+        }
+
+        .navbar .auth-buttons .signup-btn {
+            background-color: #ff6f61;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        .navbar .auth-buttons .login-btn {
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); 
+
+        }
+        .navbar .auth-buttons .login-btn:hover{
+            background-color: rgba(217, 208, 208, 0.7)
+
+        }
+
+        .navbar .auth-buttons .signup-btn:hover {
+            background-color: #ff9068;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 100px;
+            text-align: center;
+            
+            
+
+        }
+
+        .main-content h1 {
+            font-size: 3rem;
+            color: #000000;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .main-content p {
+            font-size: 1.2rem;
+            color: #000000;
+            max-width: 600px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease;
+        }
+
+        /* FYP Info Section */
+.fyp-info {
+  padding: 20px;
+  border-radius: 7px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  margin-bottom: 50px;
+  animation: fadeInUp 1s ease;
+  justify-content: space-between;
+  margin: 30px 3px;
+  height: 600px;
+  
+  
+}
+
+.fyp-info .info-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* makes it responsive */
+}
+
+.fyp-info .info-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.fyp-info .info-text h1 {
+  color: #000000;
+  margin-bottom: 10px;
+  font-size: 2.5rem;
+}
+
+.fyp-info .info-text p {
+  color: #000000;
+  line-height: 1.8;
+}
+
+.info-animation{
+    transform: translateY(-200px); /* Move upward */
+    transition: transform 0.1s ease-in-out;
+    display: flex;
+    justify-content: center;
+}
+.fyp-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+
+/* Make the animation bigger and on the right */
+dotlottie-player {
+  flex: 1;
+  max-width: 450px; /* Make it big but not overflow */
+  margin: 20px auto;
+  justify-content: right;
+  width: 400px; /* Adjust size as needed */
+  height: auto;
+  margin-right: 20px; /* spacing from text */
+  
+}
+.after-info {
+  
+  padding: 25px 30px;
+  border-radius: 12px;
+ 
+  margin: 40px auto;
+  max-width: 700px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.after-info h2 {
+  font-size: 2rem;
+  color: #09456e;
+  margin-bottom: 10px;
+}
+
+.after-info p {
+  font-size: 1.2rem;
+  color: #333;
+}
+    /* Role Selection Blocks */
+        .login-options {
+            padding-top: 50px;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            
+        }
+
+        .login-options .block {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 3px solid #09456e;
+        }
+
+        .login-options .block:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+
+        }
+
+        .login-options .block h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .login-options .block button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            border: 2px solid #09456e;
+            
+        }
+
+        .login-options .block button:hover {
+            background-color: #0056b3;
+        }
+
+        .login-options .block .button-container {
+            display: flex;
+            justify-content: space-between; /* Align buttons side by side */
+            gap: 10px; /* Adjust gap between buttons */ 
+        }
+
+        .login-options .block button {
+            flex: 1; /* Make buttons equal width */
+            border-radius: 30px; /* Retain existing styles */
+            padding: 10px 0; /* Adjust padding for consistency */
+        }
+
+
+        /* Modal Styles */
+.modal-header {
+    background-color: #acc7e4; /* Header background color */
+    color: #fff; /* Header text color */
+
+
+}
+
+.modal-title {
+    font-weight: bold;
+    
+   
+}
+
+.modal-body {
+    background-color: #f8f9fa; /* Body background color */
+}
+
+.modal-footer {
+    background-color: #f1f1f1; /* Footer background color */
+    
+}
+
+.modal-footer .btn {
+    border-radius: 20px; /* Rounded corners for buttons */
+    
+}
+
+.modal input[type="text"],
+.modal input[type="password"],
+.modal input[type="email"] {
+    border: 1px solid #ced4da; /* Border color */
+    border-radius: 5px; /* Rounded input fields */
+    padding: 10px; /* Padding inside input fields */
+    width: 100%; /* Full width */
+    margin-bottom: 15px; /* Space between input fields */
+}
+
+.modal input[type="text"]:focus,
+.modal input[type="password"]:focus,
+.modal input[type="email"]:focus {
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove outline */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Shadow effect */
+}
+
+.modal .btn-primary {
+    background-color: #007bff; /* Primary button color */
+    border: none; /* Remove border */
+    transition: background-color 0.3s; /* Transition effect */
+}
+
+.modal .btn-primary:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.modal .btn-secondary {
+    background-color: #6c757d; /* Secondary button color */
+    border: none; /* Remove border */
+    transition: background-color 0.3s; /* Transition effect */
+}
+
+.modal .btn-secondary:hover {
+    background-color: #5a6268; /* Darker shade on hover */
+}
+
+
+
+
+        /* Keyframes for Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .fyp-info .info-text h1 {
+                font-size: 2rem;
+            }
+
+            .login-options {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .modal-dialog {
+                 max-width: 90%; /* Full width for small screens */
+            }
+
+             .modal-body {
+               padding: 15px; /* Padding for mobile */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#" class="logo">📚 ExAmigo</a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#settings">Settings</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <button class="signup-btn" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+            <button class="login-btn" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+            
+            
+            <!-- <button class="signup-btn" onclick="redirectToSignup()">Sign Up</button>
+            <button class="login-btn" onclick="redirectToLogin()">Log In</button> -->
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Welcome to ExAmigo!</h1>
+        <p>Where Learning Meets Innovation! 📚 </p>
+    </div>
+
+    <!-- FYP Info Section -->
+    <section class="fyp-info" id="home">
+        <div class="fyp-flex">
+            <div class="info-text">
+             
+                <h1>💡 Learn with us!</h1>
+                <p>At ExAmigo, we don’t just help you study — we help you excel. Our AI-powered quiz generator crafts customized quizzes tailored just for you!</p>
+
+                <p>✅ Create quizzes in seconds</p>
+                <p>✅ Practice with MCQs, True/False, and Subjective questions</p>
+                <p>✅ Get instant feedback and smart grading</p>
+                <p>✅ Learn more. Stress less. 📝</p>
+            <div class="info-animation">
+            <dotlottie-player
+            src="https://lottie.host/53285b1e-2085-4c4b-88e2-a732ff797d82/RgG204nbz1.lottie"
+            background="transparent"
+            speed="1"
+            style="width: 500px; height: 500px; margin-top: 20px; transform: translateY(-20px);"
+            loop
+            autoplay
+        ></dotlottie-player>
+            </div>
+        </section>
+
+        <div class="after-info">
+            <h2> Start your journey now!</h2>
+            <p><em>Sign up as a student or teacher and see the magic unfold.</em></p>
+          </div>
+
+    <!-- Login Options -->
+    <section class="login-options">
+        <div class="block student-block">
+            <img src="https://img.icons8.com/color/100/000000/student-male.png" alt="Student Icon">
+            <h2>Student</h2>
+            <p>Access personalized quizzes and track your progress as a student!</p>
+            <div class="button-container">
+               <!-- <button onclick="redirectToSignup('student')">Sign Up</button>
+                <button onclick="redirectToLogin('student')">Login</button> -->
+
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Registration</button>
+            </div>
+        </div>
+
+
+        <div class="block teacher-block">
+            <img src="https://img.icons8.com/color/100/000000/teacher.png" alt="Teacher Icon">
+            <h2>Teacher</h2>
+            <p>Create and manage quizzes to enhance your students' learning experience.</p>
+            <div class="button-container">
+               <!-- <button onclick="redirectToSignup('teacher')" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+                <button onclick="redirectToLogin('teacher')" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button> -->
+
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Registration</button>
+            </div>
+        </div>
+                <!-- Signup Modal -->
+        <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="signupModalLabel">Registration</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="signupForm">
+                            <div class="mb-3">
+                                <label for="signupEmail" class="form-label">Email address:</label>
+                                <input type="email" class="form-control" id="signupEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fname" class="form-label">First Name:</label>
+                                <input type="text" class="form-control" id="fname" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="lnamee" class="form-label">Last Name:</label>
+                                <input type="text" class="form-control" id="lname" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="signupPassword" class="form-label">Password:</label>
+                                <input type="password" class="form-control" id="signupPassword" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="signupConfirmPassword" class="form-label">Confirm Password:</label>
+                                <input type="password" class="form-control" id="signupConfirmPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Done</button>
+                            <hr>
+                            <br>
+                            
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loginModalLabel" >Log In</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="loginEmail" class="form-label">Email address/Username:</label>
+                                <input type="email" class="form-control" id="loginEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Password:</label>
+                                <input type="password" class="form-control" id="loginPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Done</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- Footer -->
+    <footer class="text-center mt-4">
+        <p>&copy; 2024 QuizCraft | All Rights Reserved</p>
+    </footer>
+
+    <!-- JavaScript for Button Navigation -->
+    <script>
+        function redirectToLogin(role) {
+            if (role === 'student') {
+                window.location.href = 'login-student.html';
+            } else if (role === 'teacher') {
+                window.location.href = 'login-teacher.html';
+            }
+        }
+        // Handle signup form submission
+    document.getElementById('signupForm').onsubmit = function(event) {
+        event.preventDefault(); // Prevent form submission
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        const role = document.getElementById('signupRole').value;
+        
+        // Here you can handle the signup logic (e.g., API call)
+        console.log('Sign Up:', { email, password, role });
+        alert('Sign Up successful!'); // Placeholder for success message
+        $('#signupModal').modal('hide'); // Close the modal
+    };
+
+    // Handle login form submission
+    document.getElementById('loginForm').onsubmit = function(event) {
+        event.preventDefault(); // Prevent form submission
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const role = document.getElementById('loginRole').value;
+        
+        // Here you can handle the login logic (e.g., API call)
+        console.log('Log In:', { email, password, role });
+        alert('Log In successful!'); // Placeholder for success message
+        $('#loginModal').modal('hide'); // Close the modal
+    };
+
+    </script>
+
+    <!-- Bootstrap JS (Optional for responsive navbar) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+  src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+  type="module"
+></script>
+
+
+</body>
+
+</html>
+
