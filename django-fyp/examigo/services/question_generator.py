@@ -2,7 +2,7 @@
 
 import os
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import SystemMessage, ChatMessage, HumanMessage
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -11,7 +11,7 @@ from langchain_community.vectorstores import FAISS
 # Load environment variables for API keys
 load_dotenv()
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-genai.Client(api_key=GOOGLE_API_KEY)
+genai.configure(api_key=GOOGLE_API_KEY)
 
 # Constants
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"# For embeddings

@@ -334,8 +334,9 @@ def chat_message(request, chat_id):
             
             # Generate AI response
             try:
+                print("going to get")
                 ai_response = generate_ai_response(chat.document.id, user_message)
-                
+                print("out to get")
                 # Save AI response
                 ai_message = ChatMessage.objects.create(
                     chat=chat,

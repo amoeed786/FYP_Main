@@ -2,7 +2,7 @@
 
 import os
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import ChatMessage, SystemMessage, HumanMessage
 import re
@@ -10,7 +10,7 @@ import re
 # Load environment variables for API keys
 load_dotenv()
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-genai.Client(api_key=GOOGLE_API_KEY)
+genai.configure(api_key=GOOGLE_API_KEY)
 # Constants
 GOOGLE_MODEL = "gemini-2.5-flash-preview-04-17"
 TEMPERATURE = 0.3  # Lower temperature for more consistent evaluation
