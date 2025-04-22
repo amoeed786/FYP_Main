@@ -1,0 +1,73 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Quiz Results{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Results: {{ quiz.title }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="score-overview text-center mb-4">
+                    <h2 class="mb-3">Your Score: {{ attempt.score }} / {{ total_possible }}</h2>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar {% if percentage >= 70 %}bg-success{% elif percentage >= 50 %}bg-warning{% else %}bg-danger{% endif %}" 
+                             role="progressbar" 
+                             style="width: {{ percentage }}%;" 
+                             aria-valuenow="{{ percentage }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">{{ percentage }}%</div>
+                    </div>
+                    <p class="mt-2 text-muted">Completed on {{ attempt.completed_at|date:"F d, Y - H:i" }}</p>
+                </div>
+                
+                <div class="results-details">
+                    <h5 class="mb-3">Detailed Feedback</h5>
+                    
+                    {% for answer in answers %}
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center 
+                                          {% if answer.score >= 7 %}bg-success bg-opacity-25
+                                          {% elif answer.score >= 5 %}bg-warning bg-opacity-25
+                                          {% else %}bg-danger bg-opacity-25{% endif %}">
+                                <h6 class="mb-0">Question {{ forloop.counter }}</h6>
+                                <span class="badge {% if answer.score >= 7 %}bg-success{% elif answer.score >= 5 %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ answer.score }}/10
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="question-text mb-3">
+                                    <strong>Question:</strong>
+                                    <p>{{ answer.question.text }}</p>
+                                </div>
+                                
+                                <div class="your-answer mb-3">
+                                    <strong>Your Answer:</strong>
+                                    <p>{{ answer.text }}</p>
+                                </div>
+                                
+                                <div class="ideal-answer mb-3">
+                                    <strong>Ideal Answer:</strong>
+                                    <p>{{ answer.question.ideal_answer }}</p>
+                                </div>
+                                
+                                <div class="feedback">
+                                    <strong>Feedback:</strong>
+                                    <p>{{ answer.feedback }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+                        <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-outline-primary">Retake Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

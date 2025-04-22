@@ -1,0 +1,139 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Generate Quiz{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Generate Quiz from: {{ document.title }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Quiz Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.difficulty.id_for_label }}" class="form-label">Difficulty Level</label>
+                            {{ form.difficulty }}
+                            {% if form.difficulty.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.difficulty.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.bloom_level.id_for_label }}" class="form-label">Bloom's Taxonomy Level</label>
+                            {{ form.bloom_level }}
+                            {% if form.bloom_level.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.bloom_level.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.topic.id_for_label }}" class="form-label">Topic Focus (Optional)</label>
+                        {{ form.topic }}
+                        {% if form.topic.errors %}
+                            <div class="text-danger">
+                                {% for error in form.topic.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Narrow down questions to a specific topic or leave blank for general coverage</div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.num_questions.id_for_label }}" class="form-label">Number of Questions</label>
+                            {{ form.num_questions }}
+                            {% if form.num_questions.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.num_questions.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.question_type.id_for_label }}" class="form-label">Question Type</label>
+                            {{ form.question_type }}
+                            {% if form.question_type.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.question_type.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Generate Quiz</button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4 shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Bloom's Taxonomy Guide</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="mb-0">
+                            <li><strong>Remember:</strong> Recall facts and basic concepts</li>
+                            <li><strong>Understand:</strong> Explain ideas or concepts</li>
+                            <li><strong>Apply:</strong> Use information in new situations</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="mb-0">
+                            <li><strong>Analyze:</strong> Draw connections among ideas</li>
+                            <li><strong>Evaluate:</strong> Justify a stand or decision</li>
+                            <li><strong>Create:</strong> Produce new or original work</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap form classes to Django form inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('input, select, textarea').forEach(function(element) {
+            if (element.type !== 'checkbox' && element.type !== 'radio') {
+                element.classList.add('form-control');
+            } else {
+                element.classList.add('form-check-input');
+            }
+        });
+    });
+</script>
+{% endblock %}

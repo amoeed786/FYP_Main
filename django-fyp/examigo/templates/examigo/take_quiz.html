@@ -1,0 +1,78 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Take Quiz{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">{{ quiz.title }}</h4>
+                <span class="badge bg-light text-primary">{{ quiz.difficulty }}</span>
+            </div>
+            <div class="card-body">
+                <div class="quiz-info mb-4">
+                    <p class="mb-1"><strong>Document:</strong> {{ quiz.document.title }}</p>
+                    <p class="mb-1"><strong>Bloom's Level:</strong> {{ quiz.bloom_level }}</p>
+                    <p class="mb-0"><strong>Questions:</strong> {{ quiz.questions.count }}</p>
+                </div>
+                
+                <form method="post" action="{% url 'submit_quiz' quiz.id %}">
+                    {% csrf_token %}
+                    
+                    {% for question, form in answer_forms %}
+                        <div class="card mb-4 question-card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">Question {{ forloop.counter }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="question-text mb-3">
+                                    <p>{{ question.text }}</p>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="{{ form.text.id_for_label }}" class="form-label">Your Answer:</label>
+                                    {{ form.text }}
+                                    {% if form.text.errors %}
+                                        <div class="text-danger">
+                                            {% for error in form.text.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Submit Quiz</button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Save for Later</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap form classes to Django form inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('textarea').forEach(function(textarea) {
+            textarea.classList.add('form-control');
+            textarea.rows = 5;
+        });
+
+        // Auto-save functionality (optional)
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach(function(textarea) {
+            textarea.addEventListener('blur', function() {
+                // You could implement AJAX saving here
+                console.log('Answer autosaved for: ' + textarea.id);
+            });
+        });
+    });
+</script>
+{% endblock %}
