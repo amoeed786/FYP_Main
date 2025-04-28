@@ -7,14 +7,14 @@
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Log In</h4>
+                <h4 class="mb-0">Log In{% if request.GET.role == 'student' %} as Student{% elif request.GET.role == 'teacher' %} as Teacher{% endif %}</h4>
             </div>
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
                     
                     <div class="mb-3">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Username or Email</label>
                         {{ form.username }}
                         {% if form.username.errors %}
                             <div class="text-danger">
@@ -37,11 +37,15 @@
                         {% endif %}
                     </div>
                     
+                    {% if request.GET.role %}
+                    <input type="hidden" name="user_type" value="{{ request.GET.role }}">
+                    {% endif %}
+                    
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                 </form>
             </div>
             <div class="card-footer text-center">
-                <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+                <p class="mb-0">Don't have an account? <a href="{% url 'register' %}{% if request.GET.role %}?role={{ request.GET.role }}{% endif %}">Register</a></p>
             </div>
         </div>
     </div>

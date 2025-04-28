@@ -26,6 +26,40 @@
                     </div>
                     
                     <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                        {% if email_error %}
+                            <div class="text-danger">{{ email_error }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" name="first_name" id="first_name" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" name="last_name" id="last_name" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">User Type</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="user_type" id="student" value="student" {% if request.GET.role == 'student' %}checked{% endif %} required>
+                            <label class="form-check-label" for="student">
+                                Student
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="user_type" id="teacher" value="teacher" {% if request.GET.role == 'teacher' %}checked{% endif %}>
+                            <label class="form-check-label" for="teacher">
+                                Teacher
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
                         <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
                         {{ form.password1 }}
                         {% if form.password1.errors %}
@@ -54,7 +88,7 @@
                 </form>
             </div>
             <div class="card-footer text-center">
-                <p class="mb-0">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+                <p class="mb-0">Already have an account? <a href="{% url 'login' %}{% if request.GET.role %}?role={{ request.GET.role }}{% endif %}">Log in</a></p>
             </div>
         </div>
     </div>
@@ -66,7 +100,9 @@
     // Add Bootstrap form classes to Django form inputs
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('input').forEach(function(input) {
-            input.classList.add('form-control');
+            if (!input.classList.contains('form-check-input')) {
+                input.classList.add('form-control');
+            }
         });
     });
 </script>

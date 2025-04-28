@@ -7,6 +7,11 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.conf import settings
 
+from django.contrib.auth import login, authenticate
+from .forms import CustomUserCreationForm
+from .models import User
+from django.contrib.auth.forms import AuthenticationForm
+
 import os
 import logging
 
@@ -20,12 +25,12 @@ from .services.answer_evaluator import evaluate_answer
 from .services.document_processor import process_document_for_chat, generate_ai_response
 
 logger = logging.getLogger(__name__)
-
+"""
 def home(request):
-    """
+   
     Home page view that shows recent quizzes and provides navigation.
     For logged-in users, it shows their documents and quizzes.
-    """
+   
     if request.user.is_authenticated:
         documents = Document.objects.filter(uploaded_by=request.user).order_by('-uploaded_at')[:5]
         recent_quizzes = Quiz.objects.filter(document__uploaded_by=request.user).order_by('-created_at')[:5]
@@ -39,12 +44,29 @@ def home(request):
     else:
         context = {}
     
+    return render(request, 'examigo/home.html', context)  """
+
+def home(request):
+    context = {}
+
+    if request.user.is_authenticated:
+        documents = Document.objects.filter(uploaded_by=request.user).order_by('-uploaded_at')
+        recent_quizzes = Quiz.objects.filter(document__uploaded_by=request.user).order_by('-created_at')[:5]
+        recent_attempts = Attempt.objects.filter(user=request.user).order_by('-started_at')[:5]
+        
+        context = {
+            'documents': documents,
+            'recent_quizzes': recent_quizzes,
+            'recent_attempts': recent_attempts,
+        }
+    
     return render(request, 'examigo/home.html', context)
+"""
 
 def register(request):
-    """
+   
     User registration view that creates new accounts.
-    """
+   
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -55,8 +77,48 @@ def register(request):
     else:
         form = UserCreationForm()
     
+    return render(request, 'examigo/register.html', {'form': form}) """
+
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.email = request.POST.get('email')
+            user.first_name = request.POST.get('first_name')
+            user.last_name = request.POST.get('last_name')
+            user.user_type = request.POST.get('user_type')
+            user.save()
+            
+            # Log the user in
+            login(request, user)
+            messages.success(request, f"Account created successfully! Welcome, {user.username}!")
+            return redirect('home')
+    else:
+        form = CustomUserCreationForm()
+        
     return render(request, 'examigo/register.html', {'form': form})
 
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user_type = request.POST.get('user_type')
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Check if user type matches (if specified)
+            if user_type and user.user_type != user_type:
+                messages.error(request, f"This account is not registered as a {user_type}.")
+                return render(request, 'examigo/login.html', {'form': AuthenticationForm()})
+                
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, "Invalid username or password.")
+    
+    return render(request, 'examigo/login.html', {'form': AuthenticationForm()})
 # Replace your existing upload_document function in examigo/views.py with this one
 
 @login_required

@@ -7,6 +7,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import SystemMessage, ChatMessage, HumanMessage
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+from sentence_transformers import SentenceTransformer
+
 
 # Load environment variables for API keys
 load_dotenv()

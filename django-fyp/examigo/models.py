@@ -1,6 +1,37 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
+
+class User(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ('student', 'Student'),
+        ('teacher', 'Teacher'),
+    )
+    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='student')
+
+     # Add these fields with custom related_name attributes
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name='groups',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        related_name='examigo_user_set'  # Custom related_name
+    )
+    
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name='user permissions',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        related_name='examigo_user_set'  # Custom related_name
+    )
+    
+    def is_student(self):
+        return self.user_type == 'student'
+    
+    def is_teacher(self):
+        return self.user_type == 'teacher'
+    
 class Document(models.Model):
     """Model for uploaded PDF documents"""
     title = models.CharField(max_length=255)

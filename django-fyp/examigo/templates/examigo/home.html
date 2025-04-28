@@ -2,30 +2,289 @@
 
 {% block title %}ExAmigo - Home{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Navbar Styles are in base.html */
+
+    /* Main Content Styles */
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-top: 100px;
+        text-align: center;
+    }
+
+    .main-content h1 {
+        font-size: 3rem;
+        color: #000000;
+        margin-bottom: 20px;
+        animation: fadeInDown 1s ease;
+    }
+
+    .main-content p {
+        font-size: 1.2rem;
+        color: #000000;
+        max-width: 600px;
+        line-height: 1.6;
+        animation: fadeIn 1.5s ease;
+    }
+
+    /* FYP Info Section */
+    .fyp-info {
+        padding: 20px;
+        border-radius: 7px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        margin-bottom: 50px;
+        animation: fadeInUp 1s ease;
+        justify-content: space-between;
+        margin: 30px 3px;
+        height: 600px;
+    }
+
+    .fyp-info .info-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .fyp-info .info-text {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .fyp-info .info-text h1 {
+        color: #000000;
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+    }
+
+    .fyp-info .info-text p {
+        color: #000000;
+        line-height: 1.8;
+    }
+
+    .info-animation {
+        transform: translateY(-200px);
+        transition: transform 0.1s ease-in-out;
+        display: flex;
+        justify-content: center;
+    }
+
+    .fyp-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    dotlottie-player {
+        flex: 1;
+        max-width: 450px;
+        margin: 20px auto;
+        justify-content: right;
+        width: 400px;
+        height: auto;
+        margin-right: 20px;
+    }
+
+    .after-info {
+        padding: 25px 30px;
+        border-radius: 12px;
+        margin: 40px auto;
+        max-width: 700px;
+        text-align: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .after-info h2 {
+        font-size: 2rem;
+        color: #09456e;
+        margin-bottom: 10px;
+    }
+
+    .after-info p {
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    /* Role Selection Blocks */
+    .login-options {
+        padding-top: 50px;
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+    }
+
+    .login-options .block {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 3px solid #09456e;
+    }
+
+    .login-options .block:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .login-options .block h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+
+    .login-options .block button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 30px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+        border: 2px solid #09456e;
+    }
+
+    .login-options .block button:hover {
+        background-color: #0056b3;
+    }
+
+    .login-options .block .button-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .login-options .block button {
+        flex: 1;
+        border-radius: 30px;
+        padding: 10px 0;
+    }
+
+    /* Keyframes for Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .main-content h1 {
+            font-size: 2.2rem;
+        }
+        .fyp-info .info-text h1 {
+            font-size: 2rem;
+        }
+        .login-options {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-lg-8 mx-auto text-center mb-5">
-        <h1 class="display-4">Welcome to <strong>Ex</strong>Amigo</h1>
-        <p class="lead">Upload documents, generate exams, and get instant grading with AI assistance.</p>
-        {% if not user.is_authenticated %}
-            <div class="mt-4">
-                <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-2">Register</a>
-                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
-            </div>
-        {% else %}
-            <div class="mt-4">
-                <a href="{% url 'upload_document' %}" class="btn btn-primary btn-lg">Upload Document</a>
-                {% if documents %}
-                    <a href="{% url 'document_chat' documents.0.id %}" class="btn btn-success btn-lg ms-2">
-                        <i class="bi bi-chat-dots"></i> Talk to AI Instructor
-                    </a>
-                {% endif %}
-            </div>
-        {% endif %}
-    </div>
+<!-- Main Content -->
+<div class="main-content">
+    <h1>Welcome to ExAmigo!</h1>
+    <p>Where Learning Meets Innovation! 📚</p>
 </div>
 
-{% if user.is_authenticated %}
+<!-- FYP Info Section -->
+<section class="fyp-info" id="home">
+    <div class="fyp-flex">
+        <div class="info-text">
+            <h1>💡 Learn with us!</h1>
+            <p>At ExAmigo, we don't just help you study — we help you excel. Our AI-powered quiz generator crafts customized quizzes tailored just for you!</p>
+            <p>✅ Create quizzes in seconds</p>
+            <p>✅ Practice with MCQs, True/False, and Subjective questions</p>
+            <p>✅ Get instant feedback and smart grading</p>
+            <p>✅ Learn more. Stress less. 📝</p>
+        </div>
+        <div class="info-animation">
+            <dotlottie-player
+                src="https://lottie.host/53285b1e-2085-4c4b-88e2-a732ff797d82/RgG204nbz1.lottie"
+                background="transparent"
+                speed="1"
+                style="width: 500px; height: 500px; margin-top: 20px; transform: translateY(-20px);"
+                loop
+                autoplay
+            ></dotlottie-player>
+        </div>
+    </div>
+</section>
+
+<div class="after-info">
+    <h2>Start your journey now!</h2>
+    <p><em>Sign up as a student or teacher and see the magic unfold.</em></p>
+</div>
+
+{% if not user.is_authenticated %}
+<!-- Login Options -->
+<section class="login-options">
+    <div class="block student-block">
+        <img src="https://img.icons8.com/color/100/000000/student-male.png" alt="Student Icon">
+        <h2>Student</h2>
+        <p>Access personalized quizzes and track your progress as a student!</p>
+        <div class="button-container">
+            <a href="{% url 'login' %}?role=student" class="btn btn-primary">Login</a>
+            <a href="{% url 'register' %}?role=student" class="btn btn-secondary">Registration</a>
+        </div>
+    </div>
+
+    <div class="block teacher-block">
+        <img src="https://img.icons8.com/color/100/000000/teacher.png" alt="Teacher Icon">
+        <h2>Teacher</h2>
+        <p>Create and manage quizzes to enhance your students' learning experience.</p>
+        <div class="button-container">
+            <a href="{% url 'login' %}?role=teacher" class="btn btn-primary">Login</a>
+            <a href="{% url 'register' %}?role=teacher" class="btn btn-secondary">Registration</a>
+        </div>
+    </div>
+</section>
+{% else %}
 <!-- Document cards section -->
 <div class="row">
     <div class="col-12">
@@ -98,6 +357,8 @@
         </div>
     </div>
 
+    <!-- Rest of the authenticated user dashboard -->
+    <!-- (Keeping the original dashboard structure from your second template) -->
     <!-- Recent Quizzes -->
     <div class="col-md-4">
         <div class="card shadow-sm">
@@ -166,33 +427,9 @@
         </div>
     </div>
 </div>
-{% else %}
-<!-- Features section for non-logged in users -->
-<div class="row mt-5">
-    <div class="col-md-4">
-        <div class="card text-center h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Upload Your Documents</h5>
-                <p class="card-text">Upload PDF documents and textbooks to generate customized exams.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Generate AI Exams</h5>
-                <p class="card-text">Create quizzes with MCQs and short questions based on your uploaded content.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-center h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Talk to AI Instructor</h5>
-                <p class="card-text">Get personalized help and explanations about your documents from our AI teaching assistant.</p>
-            </div>
-        </div>
-    </div>
-</div>
 {% endif %}
-{% endblock %}[]
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+{% endblock %}
