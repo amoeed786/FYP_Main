@@ -1,0 +1,40 @@
+<!-- examigo/templates/examigo/generate_semester_plan.html -->
+{% extends 'examigo/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Generate Semester Plan</h2>
+    <p>Using document: <strong>{{ document.title }}</strong></p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="course_title" class="form-label">Course Title</label>
+            <input type="text" class="form-control" id="course_title" name="course_title" 
+                   value="{{ document.title|title|default:'' }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="num_weeks" class="form-label">Number of Weeks</label>
+            <input type="number" class="form-control" id="num_weeks" name="num_weeks" 
+                   value="12" min="1" max="20" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="start_date" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" 
+                   value="{{ default_start_date }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="notes" class="form-label">Additional Notes (Optional)</label>
+            <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+            <small class="form-text text-muted">Add any specific requirements or focuses for this semester plan.</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Generate Semester Plan</button>
+        <a href="{% url 'document_for_teacher' document.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

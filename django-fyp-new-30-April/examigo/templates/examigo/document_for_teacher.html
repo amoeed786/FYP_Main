@@ -1,0 +1,75 @@
+<!-- examigo/templates/examigo/document_for_teacher.html -->
+{% extends 'examigo/base.html' %}
+
+{% block title %}Plan {{ document.title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-8">
+    <div class="card shadow">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0">Semester Plan for "{{ document.title }}"</h4>
+      </div>
+      <div class="card-body">
+        <!-- Display newly created plan immediately -->
+        {% if created_plan %}
+          <div class="alert alert-success">
+            Semester Plan "<strong>{{ created_plan.title }}</strong>" created!
+          </div>
+          {% if created_weeks %}
+            <h5 class="mt-3">Weekly Breakdown</h5>
+            <div class="list-group mb-4">
+              {% for w in created_weeks %}
+                <div class="list-group-item">
+                  <h6>Week {{ w.week }}: {{ w.topic }}</h6>
+                  <p><strong>Objectives:</strong></p>
+                  <ul>
+                    {% for obj in w.objectives %}
+                      <li>{{ obj }}</li>
+                    {% endfor %}
+                  </ul>
+                  <p><strong>Activities:</strong> {{ w.activities }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p>No detailed weekly breakdown found.</p>
+          {% endif %}
+        {% endif %}
+
+        <!-- Semester Plan Form -->
+        <form method="post">
+          {% csrf_token %}
+          {{ plan_form.non_field_errors }}
+          <div class="mb-3">
+            <label for="id_title" class="form-label">Plan Title</label>
+            {{ plan_form.title }}
+            {% for err in plan_form.title.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            <label for="id_start_date" class="form-label">Start Date</label>
+            {{ plan_form.start_date }}
+            {% for err in plan_form.start_date.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            <label for="id_end_date" class="form-label">End Date</label>
+            {{ plan_form.end_date }}
+            {% for err in plan_form.end_date.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            <label for="id_notes" class="form-label">Notes / JSON weeks</label>
+            {{ plan_form.notes }}
+            {% for err in plan_form.notes.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <button type="submit" class="btn btn-primary">Save Plan</button>
+          <!-- Add this to your document_for_teacher.html template where appropriate -->
+<div class="mb-4">
+    <a href="{% url 'generate_semester_plan' document.id %}" class="btn btn-primary">
+        <i class="fas fa-calendar-alt"></i> Generate Semester Plan
+    </a>
+</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

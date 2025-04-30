@@ -1,0 +1,75 @@
+<!-- examigo/templates/examigo/semester_plan_detail.html -->
+{% extends 'examigo/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ plan.title }}</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Document:</strong> <a href="{% url 'document_for_teacher' plan.document.id %}">{{ plan.document.title }}</a></p>
+                    <p><strong>Created by:</strong> {{ plan.teacher.username }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Start Date:</strong> {{ plan.start_date|date:"F j, Y" }}</p>
+                    <p><strong>End Date:</strong> {{ plan.end_date|date:"F j, Y" }}</p>
+                </div>
+            </div>
+            
+            {% if plan.notes %}
+            <div class="mt-3">
+                <h5>Notes:</h5>
+                <p>{{ plan.notes|linebreaks }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if plan.content %}
+    <div class="semester-plan">
+        <h3>Weekly Plan</h3>
+        
+        {% for week in plan.content.weeks %}
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <h4>Week {{ week.week }}</h4>
+            </div>
+            <div class="card-body">
+                <h5>Learning Objectives</h5>
+                <ul>
+                    {% for objective in week.objectives %}
+                    <li>{{ objective }}</li>
+                    {% endfor %}
+                </ul>
+                
+                <h5>Topics</h5>
+                <ul>
+                    {% for topic in week.topics %}
+                    <li>{{ topic }}</li>
+                    {% endfor %}
+                </ul>
+                
+                <h5>Activities</h5>
+                <ul>
+                    {% for activity in week.activities %}
+                    <li>{{ activity }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        <p>No content has been generated for this semester plan yet.</p>
+    </div>
+    {% endif %}
+    
+    <div class="mt-4">
+        <a href="{% url 'document_for_teacher' plan.document.id %}" class="btn btn-secondary">Back to Document</a>
+        <!-- Add more actions like print, export, etc. -->
+    </div>
+</div>
+{% endblock %}
