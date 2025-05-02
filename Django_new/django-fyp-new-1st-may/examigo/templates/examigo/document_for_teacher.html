@@ -1,0 +1,237 @@
+<!-- examigo/templates/examigo/document_for_teacher.html -->
+{% extends 'examigo/base.html' %}
+
+{% block title %}Plan {{ document.title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card {
+        border-radius: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 1.5rem;
+    }
+    
+    .card:hover {
+        box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+    
+    .card-header {
+        border-radius: 12px 12px 0 0;
+        font-weight: 600;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-weight: 500;
+        border-radius: 30px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+        transition: all 0.3s;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1);
+    }
+    
+    .emoji-icon {
+        margin-right: 8px;
+        font-size: 1.2em;
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        padding: 10px 15px;
+        border: 1px solid #ced4da;
+        background-color: rgba(255, 255, 255, 0.8);
+        transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+        background-color: #fff;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 0.5rem;
+    }
+    
+    .alert {
+        border-radius: 12px;
+        border: none;
+        padding: 15px 20px;
+    }
+    
+    .list-group-item {
+        border-radius: 8px;
+        margin-bottom: 8px;
+        border: none;
+        background-color: rgba(255, 255, 255, 0.7);
+        transition: all 0.2s ease;
+    }
+    
+    .list-group-item:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .list-group-item h6 {
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .list-group-item h6::before {
+        content: "📌";
+        margin-right: 8px;
+    }
+    
+    .week-objective {
+        position: relative;
+        padding-left: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .week-objective::before {
+        content: "•";
+        color: #6c63ff;
+        margin-right: 8px;
+        font-weight: bold;
+    }
+    
+    .footer {
+        margin-top: auto;
+        padding: 20px 0;
+        text-align: center;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-style: italic;
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-8">
+    <div class="card shadow">
+      <div class="card-header bg-success text-white">
+        <h4 class="mb-0"><span class="emoji-icon">📚</span>Semester Plan for "{{ document.title }}"</h4>
+      </div>
+      <div class="card-body">
+        <!-- Display newly created plan immediately -->
+        {% if created_plan %}
+          <div class="alert alert-success">
+            <span class="emoji-icon">✅</span>Semester Plan "<strong>{{ created_plan.title }}</strong>" created!
+          </div>
+          {% if created_weeks %}
+            <h5 class="mt-3"><span class="emoji-icon">📆</span>Weekly Breakdown</h5>
+            <div class="list-group mb-4">
+              {% for w in created_weeks %}
+                <div class="list-group-item">
+                  <h6>Week {{ w.week }}: {{ w.topic }}</h6>
+                  <p><strong><span class="emoji-icon">🎯</span>Objectives:</strong></p>
+                  <ul>
+                    {% for obj in w.objectives %}
+                      <li class="week-objective">{{ obj }}</li>
+                    {% endfor %}
+                  </ul>
+                  <p><strong><span class="emoji-icon">🔍</span>Activities:</strong> {{ w.activities }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p><span class="emoji-icon"></span>No detailed weekly breakdown found.</p>
+          {% endif %}
+        {% endif %}
+
+        <!-- Semester Plan Form -->
+        <form method="post">
+          {% csrf_token %}
+          {{ plan_form.non_field_errors }}
+          <div class="mb-3">
+            <label for="id_title" class="form-label"><span class="emoji-icon">📝</span>Plan Title</label>
+            {{ plan_form.title }}
+            {% for err in plan_form.title.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            <label for="id_start_date" class="form-label"><span class="emoji-icon">📅</span>Start Date</label>
+            {{ plan_form.start_date }}
+            {% for err in plan_form.start_date.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            <label for="id_end_date" class="form-label"><span class="emoji-icon">🏁</span>End Date</label>
+            {{ plan_form.end_date }}
+            {% for err in plan_form.end_date.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            <label for="id_notes" class="form-label"><span class="emoji-icon">📋</span>Notes / JSON weeks</label>
+            {{ plan_form.notes }}
+            {% for err in plan_form.notes.errors %}<div class="text-danger">{{ err }}</div>{% endfor %}
+          </div>
+          <button type="submit" class="btn btn-primary"><span class="emoji-icon">💾</span>Save Plan</button>
+          
+          <div class="mb-4 mt-4">
+            <a href="{% url 'generate_semester_plan' document.id %}" class="btn btn-primary">
+              <span class="emoji-icon">🔄</span>Generate Semester Plan
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer mt-5">
+  <div class="container">
+    <p class="mb-1">© 2025 ExAmigo - Your Study Companion <span class="emoji-icon">📚</span></p>
+    <p class="text-muted small mb-0">Smart document analysis for better learning</p>
+  </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add Bootstrap classes to Django form inputs
+    const titleInput = document.getElementById('id_title');
+    const startDateInput = document.getElementById('id_start_date');
+    const endDateInput = document.getElementById('id_end_date');
+    const notesInput = document.getElementById('id_notes');
+    
+    if (titleInput) titleInput.classList.add('form-control');
+    if (startDateInput) startDateInput.classList.add('form-control');
+    if (endDateInput) endDateInput.classList.add('form-control');
+    if (notesInput) {
+      notesInput.classList.add('form-control');
+      notesInput.rows = 5;
+    }
+  });
+</script>
+{% endblock %}

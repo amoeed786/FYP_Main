@@ -1,0 +1,327 @@
+{% extends 'examigo/base.html' %}
+{% block title %}ExAmigo - Quiz Results{% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    }
+    .chart-container {
+        position: relative;
+        height: 250px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .stat-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: white;
+        transition: transform 0.3s;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+    .quiz-header {
+        background: linear-gradient(to right, #4e73df, #36b9cc);
+        color: white;
+        border-radius: 10px 10px 0 0;
+        padding: 20px;
+    }
+    .result-badge {
+        font-size: 1.2rem;
+        padding: 8px 15px;
+        border-radius: 20px;
+        display: inline-block;
+        margin: 10px 0;
+    }
+    .question-card {
+        border-radius: 10px;
+        overflow: hidden;
+        transition: box-shadow 0.3s;
+        margin-bottom: 25px;
+        border: 1px solid rgba(0,0,0,0.125);
+    }
+    .question-card:hover {
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+</style>
+<div class="row mb-4">
+    <div class="col-md-10 mx-auto">
+        <div class="card shadow">
+            <div class="quiz-header">
+                <h3 class="mb-0">Results: {{ quiz.title }}</h3>
+                <p class="mb-0 mt-2 text-white-50">Completed on {{ attempt.completed_at|date:"F d, Y - H:i" }}</p>
+            </div>
+            <div class="card-body p-4">
+                <!-- Performance Summary Section -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-value {% if percentage >= 70 %}text-success{% elif percentage >= 50 %}text-warning{% else %}text-danger{% endif %}">
+                                {{ percentage|floatformat:1 }}%
+                            </div>
+                            <div class="stat-label">Overall Score</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                          <div class="stat-value text-primary">{{ attempt.score }}/{{ attempt.total_possible }}</div>
+                          <div class="stat-label">Points Earned</div>
+                        </div>
+                      </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-value text-info">
+                                {% if time_taken_display %}
+                                    {{ time_taken_display }}
+                                {% else %}
+                                    --:--
+                                {% endif %}
+                            </div>
+                            <div class="stat-label">Time Taken</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Section -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card shadow">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Score Distribution</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="scoreChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">Time Performance</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="timeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Badge -->
+                <div class="text-center mb-4">
+                    {% if percentage >= 80 %}
+                        <div class="result-badge bg-success text-white">Excellent! Outstanding Performance</div>
+                    {% elif percentage >= 70 %}
+                        <div class="result-badge bg-success text-white">Good Job! Above Average</div>
+                    {% elif percentage >= 50 %}
+                        <div class="result-badge bg-warning text-white">Average Performance</div>
+                    {% else %}
+                        <div class="result-badge bg-danger text-white">Needs Improvement</div>
+                    {% endif %}
+                </div>
+                
+                <div class="results-details">
+                    <h5 class="mb-3">Detailed Feedback</h5>
+                    
+                    {% for answer in answers %}
+                        <div class="question-card card">
+                            <div class="card-header d-flex justify-content-between align-items-center 
+                                          {% if answer.score >= 7 %}bg-success bg-opacity-25
+                                          {% elif answer.score >= 5 %}bg-warning bg-opacity-25
+                                          {% else %}bg-danger bg-opacity-25{% endif %}">
+                                <h6 class="mb-0">Question {{ forloop.counter }}</h6>
+                                <span class="badge {% if answer.score >= 7 %}bg-success{% elif answer.score >= 5 %}bg-warning{% else %}bg-danger{% endif %} p-2">
+                                    {{ answer.score }}/10
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="question-text mb-3">
+                                    <strong>Question:</strong>
+                                    <p>{{ answer.question.text }}</p>
+                                </div>
+                                
+                                <div class="your-answer mb-3">
+                                    <strong>Your Answer:</strong>
+                                    <p>{{ answer.text }}</p>
+                                </div>
+                                
+                                <div class="ideal-answer mb-3">
+                                    <strong>Ideal Answer:</strong>
+                                    <p>{{ answer.question.ideal_answer }}</p>
+                                </div>
+                                
+                                <div class="feedback">
+                                    <strong>Feedback:</strong>
+                                    <p>{{ answer.feedback }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+                        <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-outline-primary">Retake Quiz</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js from CDN before the scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<!-- Specific charts script -->
+<!-- Include Chart.js from CDN before the scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<!-- Specific charts script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Score Chart
+        const scoreCtx = document.getElementById('scoreChart');
+        if (scoreCtx) {
+            // Get the values from data attributes or fallback to default values
+            const correctScore = parseFloat('{{ attempt.score|default:0 }}') || 0;
+            const totalPossible = parseFloat('{{ attempt.total_possible|default:0 }}') || 1; // Fix: use attempt.total_possible
+            const incorrectScore = totalPossible - correctScore;
+            
+            console.log("Score Chart Data:", { correctScore, totalPossible, incorrectScore });
+            
+            new Chart(scoreCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Correct', 'Incorrect'],
+                    datasets: [{
+                        data: [correctScore, incorrectScore],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.8)',
+                            'rgba(255, 99, 132, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Score Breakdown'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Rest of your chart code remains the same
+        // Time Performance Chart
+        const timeCtx = document.getElementById('timeChart');
+        if (timeCtx) {
+            const timeTakenMinutes = parseFloat('{{ time_taken_minutes|default:0 }}') || 0;
+            const timeLimit = parseFloat('{{ quiz.time_limit|default:0 }}') || 0;
+            
+            console.log("Time Chart Data:", { timeTakenMinutes, timeLimit });
+            
+            if (timeTakenMinutes > 0 || timeLimit > 0) {
+                new Chart(timeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Your Time', 'Time Limit'],
+                        datasets: [{
+                            label: 'Time (minutes)',
+                            data: [timeTakenMinutes, timeLimit],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.8)',
+                                'rgba(255, 206, 86, 0.8)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Minutes'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Time Usage'
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Fallback chart if time data is missing
+                new Chart(timeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Time Data'],
+                        datasets: [{
+                            label: 'No Time Data Available',
+                            data: [0],
+                            backgroundColor: ['rgba(200, 200, 200, 0.5)']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Time Data Not Available'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Error initializing charts:", error);
+        // Display a visible error message on the page
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+            container.innerHTML = `
+                <div class="alert alert-danger">
+                    <strong>Chart Error:</strong> Could not initialize charts. See console for details.
+                </div>
+            `;
+        });
+    }
+});
+</script>
+
+{% endblock %}

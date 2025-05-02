@@ -1,0 +1,178 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Login{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        padding-top: 50px;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+    }
+    
+    .card-header {
+        padding: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .bg-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%) !important;
+    }
+    
+    .card-body {
+        padding: 2rem;
+    }
+    
+    .form-control {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #e3e6f0;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border: none;
+        border-radius: 30px;
+        padding: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+        transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #3a5fcd 0%, #1a3891 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(78, 115, 223, 0.6);
+    }
+    
+    .card-footer {
+        background-color: #f8f9fc;
+        border-top: none;
+        padding: 1.5rem;
+    }
+    
+    .card-footer a {
+        color: #4e73df;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+    
+    .card-footer a:hover {
+        color: #224abe;
+        text-decoration: underline;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #5a5c69;
+    }
+    
+    .text-danger {
+        color: #e74a3b;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="text-center mb-4">
+            <h1 class="h2 text-primary">ExAmigo</h1>
+            <p class="text-muted">Where learning meets innovation!</p>
+        </div>
+        
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0">Log In to Your Account</h4>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger">
+                                {% for error in form.username.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="text-danger">
+                                {% for error in form.password.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Register</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap form classes to Django form inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add classes to form inputs
+        document.querySelectorAll('input').forEach(function(input) {
+            input.classList.add('form-control');
+        });
+        
+        // Animation for card
+        const loginCard = document.querySelector('.card');
+        if (loginCard) {
+            setTimeout(() => {
+                loginCard.style.opacity = '1';
+                loginCard.style.transform = 'translateY(0)';
+            }, 100);
+        }
+    });
+</script>
+{% endblock %}

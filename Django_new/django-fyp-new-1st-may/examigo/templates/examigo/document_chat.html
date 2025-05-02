@@ -1,0 +1,479 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}Chat with {{ document.title }} - ExAmigo{% endblock %}
+
+{% block content %}
+<style>
+ body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.chat-page-container {
+  padding: 0;
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.chat-card {
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 100%;
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  background: linear-gradient(to right, #2a4494, #224abe);
+  padding: 1rem 2rem;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.chat-container {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #dee2e6 #f8f9fa;
+  flex-grow: 1;
+}
+
+.chat-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: #f8f9fa;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: #dee2e6;
+  border-radius: 8px;
+}
+
+.message-container {
+  margin-bottom: 1.75rem;
+  max-width: 85%;
+  clear: both;
+}
+
+.message-container.user-message {
+  float: right;
+}
+
+.message-container.ai-message {
+  float: left;
+}
+
+.message-bubble {
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.5rem;
+  position: relative;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  word-break: break-word;
+  font-size: 1.05rem;
+}
+
+.user-message .message-bubble {
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.ai-message .message-bubble {
+  background: white;
+  color: #343a40;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.message-time {
+  display: none;
+}
+
+.system-message {
+  background-color: rgba(255, 248, 220, 0.7);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  margin: 2.5rem 0;
+  border-left: 5px solid #ffc107;
+}
+
+.system-message p {
+  font-weight: 600;
+  color: #3a3a3a;
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.system-message small {
+  font-size: 0.95rem;
+}
+
+.chat-input-container {
+  background-color: white;
+  border-radius: 0;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.chat-form {
+  display: flex;
+  align-items: center;
+}
+
+.message-input {
+  border: 1.5px solid #e9ecef;
+  border-radius: 2rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.05rem;
+  flex-grow: 1;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.message-input:focus {
+  border-color: #4e73df;
+  box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.1);
+  outline: none;
+}
+
+.send-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4e73df, #224abe);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(78, 115, 223, 0.3);
+  font-size: 1.2rem;
+}
+
+.send-button i {
+  margin-right: 2px;
+}
+
+.send-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(78, 115, 223, 0.4);
+}
+
+.send-button:active {
+  transform: translateY(0);
+}
+
+.back-button {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+.document-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.3s ease;
+}
+
+.typing-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #4e73df;
+  border-radius: 50%;
+  margin: 0 3px;
+  display: inline-block;
+  opacity: 0.8;
+}
+
+.typing-dot:nth-child(1) {
+  animation: typing 1s infinite 0s;
+}
+
+.typing-dot:nth-child(2) {
+  animation: typing 1s infinite 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+  animation: typing 1s infinite 0.4s;
+}
+
+@keyframes typing {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.bot-name {
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-left: 0.5rem;
+  color: white;
+}
+
+.card-body {
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 70px);
+}
+
+.navbar, footer {
+  display: none !important;
+}
+
+.row, .col-lg-12 {
+  margin: 0;
+  padding: 0;
+}
+</style>
+
+<div class="container-fluid chat-page-container">
+  <div class="row">
+    <div class="col-lg-12 mx-auto">
+      <div class="chat-card card">
+        <div class="chat-header d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <div class="me-2">
+              <i class="bi bi-mortarboard-fill fs-3 text-white"></i>
+            </div>
+            <div>
+              <span class="bot-name">Exam Buddy 📚</span>
+            </div>
+          </div>
+          <a href="{% url 'home' %}" class="back-button">
+            <i class="bi bi-arrow-left me-1"></i> Back
+          </a>
+          <!-- No close button here -->
+        </div>
+        <div class="card-body">
+          <!-- Chat messages container -->
+          <div id="chat-messages" class="chat-container">
+            {% if not messages %}
+              <div class="system-message">
+                <i class="bi bi-mortarboard-fill mb-3 fs-3 text-warning"></i>
+                <p class="mb-2">Welcome to Exam Buddy! 🎓 Your personal study assistant for this document.</p>
+                <small class="text-muted">Ask questions about concepts 🤔, request clarification on topics 📝, or get help with understanding difficult material 💡</small>
+              </div>
+            {% else %}
+              {% for msg in messages %}
+                <div class="message-container {% if msg.is_user %}user-message{% else %}ai-message{% endif %} clearfix">
+                  <div class="message-bubble">
+                    {{ msg.content|linebreaks }}
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          
+          <!-- Message input form -->
+          <div class="chat-input-container">
+            <form id="chat-form" class="chat-form" data-chat-id="{{ chat.id }}">
+              {% csrf_token %}
+              <input type="text" id="message-input" class="message-input form-control" placeholder="Ask Exam Buddy about this document... ✏️" required autofocus>
+              <button type="submit" class="send-button">
+                <i class="bi bi-send-fill"></i> ➤
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for handling the chat interface -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatContainer = document.getElementById('chat-messages');
+    const chatForm = document.getElementById('chat-form');
+    const messageInput = document.getElementById('message-input');
+    const chatId = chatForm.getAttribute('data-chat-id');
+    
+    // Function to remove all X buttons from the interface
+    function removeAllCloseButtons() {
+      // Find and remove all close buttons
+      document.querySelectorAll('.btn-close, button[aria-label="Close"], .close-button').forEach(function(btn) {
+        btn.style.display = 'none';
+        btn.remove();
+      });
+    }
+    
+    // Remove close buttons on load
+    removeAllCloseButtons();
+    
+    // Set up a MutationObserver to remove any dynamically added close buttons
+    const observer = new MutationObserver(function(mutations) {
+      removeAllCloseButtons();
+    });
+    
+    // Observe the entire document for changes
+    observer.observe(document.body, { childList: true, subtree: true });
+    
+    // Scroll to bottom of chat
+    function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // Initial scroll
+    scrollToBottom();
+    
+    // Add message to chat
+    function addMessage(content, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message-container ${isUser ? 'user-message' : 'ai-message'} clearfix`;
+        
+        messageDiv.innerHTML = `
+            <div class="message-bubble">
+                ${content.replace(/\n/g, '<br>')}
+            </div>
+        `;
+        
+        chatContainer.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    // Create typing indicator
+    function createTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message-container ai-message clearfix';
+        typingDiv.id = 'typing-indicator';
+        
+        typingDiv.innerHTML = `
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        `;
+        
+        chatContainer.appendChild(typingDiv);
+        scrollToBottom();
+        return typingDiv;
+    }
+    
+    // Handle form submission
+    chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const message = messageInput.value.trim();
+        if (!message) return;
+        
+        // Add user message to chat
+        addMessage(message, true);
+        
+        // Clear input
+        messageInput.value = '';
+        messageInput.focus();
+        
+        // Show typing indicator
+        const typingIndicator = createTypingIndicator();
+        
+        // Send message to server
+        fetch(`/chat/message/${chatId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: `message=${encodeURIComponent(message)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Remove typing indicator
+            chatContainer.removeChild(typingIndicator);
+            
+            if (data.status === 'success') {
+                // Add AI response to chat
+                addMessage(data.message, false);
+            } else {
+                // Show error
+                addMessage(`Error: ${data.message}`, false);
+            }
+        })
+        .catch(error => {
+            // Remove typing indicator
+            chatContainer.removeChild(typingIndicator);
+            
+            // Show error
+            addMessage(`Failed to send message: ${error}`, false);
+        });
+    });
+    
+    // Focus input on page load
+    messageInput.focus();
+    
+    // Add animation to the system message if it exists
+    const systemMessage = document.querySelector('.system-message');
+    if (systemMessage) {
+        systemMessage.style.animation = 'fadeIn 0.6s ease';
+    }
+    
+    // Force full height on page load and resize
+    function setFullHeight() {
+        document.querySelector('.chat-page-container').style.height = window.innerHeight + 'px';
+        document.querySelector('.chat-card').style.height = window.innerHeight + 'px';
+        document.querySelector('.card-body').style.height = (window.innerHeight - document.querySelector('.chat-header').offsetHeight) + 'px';
+        document.querySelector('.chat-container').style.height = (window.innerHeight - document.querySelector('.chat-header').offsetHeight - document.querySelector('.chat-input-container').offsetHeight) + 'px';
+    }
+    
+    // Set full height on load
+    setFullHeight();
+    
+    // Adjust height on window resize
+    window.addEventListener('resize', setFullHeight);
+});
+</script>
+{% endblock %}
