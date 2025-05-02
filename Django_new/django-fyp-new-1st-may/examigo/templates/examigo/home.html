@@ -1,0 +1,450 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    }
+    
+    .jumbotron {
+       
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        height: 100%;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-header {
+        font-weight: 600;
+        padding: 1rem;
+    }
+    
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+        border-radius: 30px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+        background-color: #3a5fcd;
+        border-color: #3a5fcd;
+        transform: translateY(-2px);
+    }
+    
+    .btn-success {
+        background-color: #1cc88a;
+        border-color: #1cc88a;
+        border-radius: 30px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .btn-success:hover {
+        background-color: #17a673;
+        border-color: #17a673;
+        transform: translateY(-2px);
+    }
+    
+    .btn-outline-primary {
+        border-radius: 30px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .btn-outline-primary:hover {
+        transform: translateY(-2px);
+    }
+    
+    .display-4 {
+        font-weight: 700;
+        color: #4e73df;
+    }
+    
+    .lead {
+        font-size: 1.2rem;
+        color: #5a5c69;
+    }
+    
+    .list-group-item {
+        transition: background-color 0.3s;
+        border-left: none;
+        border-right: none;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f8f9fc;
+    }
+    
+    .bg-light {
+        background-color: #f8f9fc !important;
+    }
+    
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    }
+    
+    /* Role indicator */
+    .role-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+    
+    .role-student {
+        background-color: #36b9cc;
+        color: white;
+    }
+    
+    .role-teacher {
+        background-color: #f6c23e;
+        color: white;
+    }
+    
+    /* FYP Info Section */
+    .fyp-info {
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        margin-bottom: 50px;
+        animation: fadeInUp 1s ease;
+        justify-content: space-between;
+        margin: 30px 3px;
+        height: 600px;
+    }
+    
+    .fyp-info .info-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap; /* makes it responsive */
+    }
+    
+    .fyp-info .info-text {
+        flex: 1;
+        min-width: 300px;
+        max-width: 600px; /* Limit width for readability */
+    }
+    
+    .fyp-info .info-text h1 {
+        color: #000000;
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+    }
+    
+    .fyp-info .info-text p {
+        color: #000000;
+        line-height: 1.8;
+    }
+    
+    .info-animation {
+        transform: translateY(-200px); /* Move upward */
+        transition: transform 0.1s ease-in-out;
+        display: flex;
+        justify-content: center;
+        flex: 1;
+        align-items: center;
+        min-width: 300px;
+        max-width: 500px;
+    }
+    
+    .fyp-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    /* Make the animation bigger and on the right */
+    dotlottie-player {
+        flex: 1;
+        max-width: 500px; /* Make it big but not overflow */
+        margin: 20px auto;
+        justify-content: right;
+        width: 400px; /* Adjust size as needed */
+        height: auto;
+        margin-right: 20px; /* spacing from text */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center mb-5 jumbotron">
+        <h1 class="display-4">Welcome to <strong>Ex</strong>Amigo</h1>
+        <p class="lead"> <em>Where Learning Meets Innovation! </em>📚</p>
+        {% if user.is_authenticated %}
+            <div class="mt-4">
+                {% if user.profile.role == 'student' %}
+                    <span class="role-badge role-student">Student Account</span>
+                {% elif user.profile.role == 'teacher' %}
+                    <span class="role-badge role-teacher">Teacher Account</span>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        {% if not user.is_authenticated %}
+            <div class="mt-4">
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg me-2">Register</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+            </div>
+        {% else %}
+            <div class="mt-4">
+                <a href="{% url 'upload_document' %}" class="btn btn-primary btn-lg">Upload Document</a>
+                {% if documents %}
+                    <a href="{% url 'document_chat' documents.0.id %}" class="btn btn-success btn-lg ms-2">
+                        <i class="bi bi-chat-dots"></i> Talk to AI Instructor
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<!-- Document cards section -->
+<div class="row">
+    <div class="col-12">
+        <h4 class="mb-3">Your Documents</h4>
+    </div>
+</div>
+<div class="row">
+    {% for document in documents %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ document.title }}</h5>
+                    <p class="card-text">Uploaded on: {{ document.upload_date|date:"F d, Y" }}</p>
+                    <div class="btn-group w-100">
+                        <a href="{% url 'generate_quiz' document.id %}" class="btn btn-primary">Generate Quiz</a>
+                        <a href="{% url 'document_chat' document.id %}" class="btn btn-success">
+                            <i class="bi bi-chat-dots"></i> Talk to AI Instructor
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                You haven't uploaded any documents yet. <a href="{% url 'upload_document' %}">Upload your first document</a> to start generating quizzes!
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <!-- Recent Documents -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">Recent Documents</h5>
+            </div>
+            <div class="card-body">
+                {% if documents %}
+                    <ul class="list-group list-group-flush">
+                        {% for document in documents %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span>{{ document.title }}</span>
+                                    <small class="text-muted d-block">
+                                        {% if document.uploaded_at %}
+                                            {{ document.uploaded_at|date:"M d, Y" }}
+                                        {% else %}
+                                            {{ document.upload_date|date:"M d, Y" }}
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="{% url 'generate_quiz' document.id %}" class="btn btn-sm btn-outline-primary">Quiz</a>
+                                    <a href="{% url 'document_chat' document.id %}" class="btn btn-sm btn-outline-success">
+                                        <i class="bi bi-chat-dots"></i> Chat
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center text-muted">No documents uploaded yet.</p>
+                    <div class="text-center">
+                        <a href="{% url 'upload_document' %}" class="btn btn-primary">Upload Now</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Quizzes -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">Recent Quizzes</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_quizzes %}
+                    <ul class="list-group list-group-flush">
+                        {% for quiz in recent_quizzes %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span>{{ quiz.title }}</span>
+                                    <small class="text-muted d-block">{{ quiz.created_at|date:"M d, Y" }} - {{ quiz.difficulty }}</small>
+                                </div>
+                                <a href="{% url 'take_quiz' quiz.id %}" class="btn btn-sm btn-outline-primary">Take Quiz</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center text-muted">No quizzes created yet.</p>
+                    {% if documents %}
+                        <div class="text-center">
+                            <a href="{% url 'generate_quiz' documents.0.id %}" class="btn btn-primary">Create Quiz</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Attempts -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">Recent Attempts</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_attempts %}
+                    <ul class="list-group list-group-flush">
+                        {% for attempt in recent_attempts %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span>{{ attempt.quiz.title }}</span>
+                                    <small class="text-muted d-block">
+                                        {{ attempt.started_at|date:"M d, Y" }}
+                                        {% if attempt.score is not None %}
+                                            - Score: {{ attempt.score }}%
+                                        {% else %}
+                                            - In Progress
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                {% if attempt.completed_at %}
+                                    <a href="{% url 'view_results' attempt.id %}" class="btn btn-sm btn-outline-success">Results</a>
+                                {% else %}
+                                    <a href="{% url 'take_quiz' attempt.quiz.id %}" class="btn btn-sm btn-outline-warning">Continue</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-center text-muted">No quiz attempts yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- FYP Info Section -->
+<section class="fyp-info" id="home">
+    <div class="fyp-flex">
+        <div class="info-text">
+            <h1>💡 Learn with us!</h1>
+            <p>At ExAmigo, we don't just help you study — we help you excel. Our AI-powered quiz generator crafts customized quizzes tailored just for you!</p>
+            <p>✅ Create quizzes in seconds</p>
+            <p>✅ Practice with MCQs, True/False, and Subjective questions</p>
+            <p>✅ Get instant feedback and smart grading</p>
+            <p>✅ Learn more. Stress less. 📝</p>
+        </div>
+        <div class="info-animation">
+            <dotlottie-player
+                src="https://lottie.host/53285b1e-2085-4c4b-88e2-a732ff797d82/RgG204nbz1.lottie"
+                background="transparent"
+                speed="1"
+                style="width: 500px; height: 500px; margin-top: 20px; transform: translateY(200px);"
+                loop
+                autoplay
+            ></dotlottie-player>
+        </div>
+    </div>
+</section>
+
+<div class="row mt-5">
+    <div class="col-lg-8 mx-auto text-center">
+        <h2><h2> Start your journey now!</h2></h2>
+        <p class="lead" ><em> Register as a student or a teacher based on your needs.</em></p>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Student</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="https://img.icons8.com/color/96/000000/student-male--v1.png" alt="Student" class="mb-3">
+                        <p>Access personalized quizzes and track your learning progress.</p>
+                        <a href="{% url 'register' %}?role=student" class="btn btn-primary">Register as Student</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Teacher</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="https://img.icons8.com/color/96/000000/teacher--v1.png" alt="Teacher" class="mb-3">
+                        <p>Create and manage quizzes for your students and classes.</p>
+                        <a href="{% url 'register' %}?role=teacher" class="btn btn-success">Register as Teacher</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add animation effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    });
+</script>
+<script
+  src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+  type="module"
+></script>
+{% endblock %}

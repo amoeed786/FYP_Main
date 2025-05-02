@@ -1,0 +1,175 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Upload Document
+<footer class="footer mt-5">
+    <div class="container">
+        <p class="mb-1">© 2025 ExAmigo - Your Study Companion <span class="emoji-icon">📚</span></p>
+        <p class="text-muted small mb-0">Smart document analysis for better learning</p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .card {
+        border-radius: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .card:hover {
+        box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+    
+    .card-header {
+        border-radius: 12px 12px 0 0;
+        font-weight: 600;
+    }
+    
+    .btn-primary {
+        padding: 10px 20px;
+        font-weight: 500;
+        border-radius: 30px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+        transition: all 0.3s;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1);
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        padding: 10px 15px;
+    }
+    
+    .form-control:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+    }
+    
+    .emoji-icon {
+        margin-right: 8px;
+        font-size: 1.2em;
+    }
+    
+    .footer {
+        margin-top: auto;
+        padding: 20px 0;
+        text-align: center;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-style: italic;
+        font-size: 0.85rem;
+    }
+    
+    .guidelines-list li {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 5px;
+    }
+    
+    .guidelines-list li::before {
+        content: "✓";
+        color: #28a745;
+        margin-right: 8px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><span class="emoji-icon">📄</span>Upload Document</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Document Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Give your document a descriptive title</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.file.id_for_label }}" class="form-label">Upload File</label>
+                        <div class="input-group">
+                            {{ form.file }}
+                        </div>
+                        {% if form.file.errors %}
+                            <div class="text-danger">
+                                {% for error in form.file.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Upload PDF documents, textbooks or study materials</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary"><i class="emoji-icon">⬆️</i>Upload Document</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4 shadow">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><span class="emoji-icon">📋</span>Document Guidelines</h5>
+            </div>
+            <div class="card-body">
+                <ul class="mb-0 guidelines-list">
+                    <li>For best results, upload clearly formatted PDF documents</li>
+                    <li>Make sure text in the document is selectable/searchable</li>
+                    <li>Documents with clear headings and sections work best for quiz generation</li>
+                    <li>Maximum file size: 10MB</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add Bootstrap form classes to Django form inputs
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('{{ form.title.id_for_label }}');
+        if (titleInput) {
+            titleInput.classList.add('form-control');
+        }
+        
+        const fileInput = document.getElementById('{{ form.file.id_for_label }}');
+        if (fileInput) {
+            fileInput.classList.add('form-control');
+        }
+    });
+</script>
+{% endblock %}

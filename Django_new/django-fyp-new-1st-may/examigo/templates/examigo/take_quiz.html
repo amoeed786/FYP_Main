@@ -1,0 +1,465 @@
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Take Quiz{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        min-height: 100vh;
+    }
+    
+    .main-content {
+        min-height: 85vh;
+        padding-bottom: 40px;
+    }
+    
+    .card {
+        border-radius: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    /* Remove hover transform to avoid layout issues */
+    .card:hover {
+        box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+        border-radius: 12px 12px 0 0;
+        font-weight: 600;
+        
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-weight: 500;
+        border-radius: 30px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+        transition: all 0.3s;
+    }
+    
+    .btn:hover {
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1);
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        padding: 10px 15px;
+    }
+    
+    .form-control:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+    }
+    
+    .emoji-icon {
+        margin-right: 8px;
+        font-size: 1.2em;
+    }
+    
+    .question-card {
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    
+    .question-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+    
+    .quiz-info {
+        background-color: rgba(108, 99, 255, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+    
+    .badge {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .download-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .download-btn i {
+        margin-right: 10px;
+    }
+    
+    .footer {
+        padding: 20px 0;
+        text-align: center;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        border-top: 1px solid rgba(0,0,0,0.05);
+        margin-top: 20px;
+    }
+    
+    .progress-container {
+        margin-bottom: 20px;
+    }
+    
+    .timer-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+    
+    .timer-icon {
+        margin-right: 8px;
+        color: #dc3545;
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .blink {
+        animation: blink 1s linear infinite;
+    }
+    
+    #quiz-timer.countdown-active {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><span class="emoji-icon">📝</span>{{ quiz.title }}</h4>
+                    <span class="badge bg-light text-primary">{{ quiz.difficulty }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="quiz-info">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Document:</strong> {{ quiz.document.title }}</p>
+                                <p class="mb-1"><strong>Bloom's Level:</strong> {{ quiz.bloom_level }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Questions:</strong> {{ quiz.questions.count }}</p>
+                                {% if not request.user.is_teacher %}
+                                <p class="mb-0"><strong>Your Progress:</strong> <span id="progress-text">0/{{ quiz.questions.count }}</span></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Download button for all users -->
+                    <div class="mb-4">
+                        <a href="{% url 'take_quiz' quiz.id %}?download=true" class="btn btn-info btn-lg download-btn">
+                            <i class="fas fa-download"></i> Download Quiz
+                        </a>
+                    </div>
+                    
+                    {% if request.user.is_teacher %}
+                    <!-- Teacher View Mode -->
+                    {% for question in quiz.questions.all %}
+                        <div class="card question-card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">Question {{ forloop.counter }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="question-text mb-3">
+                                    <p>{{ question.text }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <!-- Download buttons for teachers -->
+                    <div class="mt-4">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <a href="{% url 'download_quiz_pdf' quiz.id %}" class="btn btn-success btn-lg d-block download-btn">
+                                    <i class="fas fa-file-pdf"></i> Download PDF
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <a href="{% url 'download_quiz_txt' quiz.id %}" class="btn btn-success btn-lg d-block download-btn">
+                                    <i class="fas fa-file-alt"></i> Download TXT
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <a href="{% url 'download_quiz_docx' quiz.id %}" class="btn btn-success btn-lg d-block download-btn">
+                                    <i class="fas fa-file-word"></i> Download DOCX
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Back to Home button for teachers -->
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-success btn-lg">Back to Home</a>
+                    </div>
+                    
+                    {% elif not view_only %}
+                    <!-- Student Quiz Taking Mode -->
+                    <div class="progress-container">
+                        <div class="progress" style="height: 10px;">
+                            <div id="quiz-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="timer-container">
+                        <span id="quiz-timer">Time spent: 00:00</span>
+                    </div>
+                    
+                    <form method="post" action="{% url 'submit_quiz' quiz.id %}" id="quiz-form">
+                        {% csrf_token %}
+                        
+                        {% for question, form in answer_forms %}
+                            <div class="card question-card" id="question-card-{{ forloop.counter }}">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Question {{ forloop.counter }}</h5>
+                                    <span class="badge bg-secondary">Answer status: <span id="status-q{{ forloop.counter }}">Not started</span></span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="question-text mb-3">
+                                        <p>{{ question.text }}</p>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="{{ form.text.id_for_label }}" class="form-label">Your Answer:</label>
+                                        {{ form.text }}
+                                        {% if form.text.errors %}
+                                            <div class="text-danger">
+                                                {% for error in form.text.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <div class="form-text mt-2">Write your answer in complete sentences for best results</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">Submit Quiz</button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Save for Later</a>
+                        </div>
+                    </form>
+                    {% else %}
+                    <!-- View only mode for non-teachers previewing the quiz -->
+                    {% for question in quiz.questions.all %}
+                        <div class="card question-card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">Question {{ forloop.counter }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="question-text mb-3">
+                                    <p>{{ question.text }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p class="mb-1">© 2025 ExAmigo - Your Study Companion <span class="emoji-icon">📚</span></p>
+        <p class="text-muted small mb-0">Smart document analysis for better learning</p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+    // Add Bootstrap form classes to Django form inputs
+document.addEventListener('DOMContentLoaded', function() {
+    // Apply form styles
+    const textareas = document.querySelectorAll('textarea');
+    if (textareas.length) {  // Check if there are any textareas
+        textareas.forEach(function(textarea) {
+            textarea.classList.add('form-control');
+            textarea.rows = 5;
+        });
+    }
+
+    // Initialize quiz tracking if in quiz mode (not view only and not teacher)
+    const quizForm = document.getElementById('quiz-form');
+    if (quizForm) {
+        // Safely get the number of questions
+        const totalQuestions = document.querySelectorAll('.question-card').length || 0;
+        let answeredQuestions = 0;
+        let startTime = new Date();
+        let timerInterval;
+        let countdownTimer;
+
+        // Progress tracking
+        function updateProgress() {
+            const progressBar = document.getElementById('quiz-progress');
+            const progressText = document.getElementById('progress-text');
+            
+            if (progressBar && progressText) {
+                const progressPercentage = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+                
+                progressBar.style.width = progressPercentage + '%';
+                progressBar.setAttribute('aria-valuenow', progressPercentage);
+                progressText.textContent = answeredQuestions + '/' + totalQuestions;
+            }
+        }
+
+        // Timer functionality for tracking time spent
+        function updateTimer() {
+            const timerElement = document.getElementById('quiz-timer');
+            if (timerElement && !timerElement.classList.contains('countdown-active')) {
+                const currentTime = new Date();
+                const elapsedTime = Math.floor((currentTime - startTime) / 1000); // in seconds
+                
+                const minutes = Math.floor(elapsedTime / 60);
+                const seconds = elapsedTime % 60;
+                
+                timerElement.textContent = 'Time spent: ' + 
+                    (minutes < 10 ? '0' + minutes : minutes) + ':' + 
+                    (seconds < 10 ? '0' + seconds : seconds);
+            }
+        }
+
+        // Time limit functionality
+        const timeLimit = parseInt('{{ quiz.time_limit|default:0 }}', 10);
+        
+        if (timeLimit > 0) {
+            let timeLeft = timeLimit * 60; // Convert to seconds
+            const timerElement = document.getElementById('quiz-timer');
+            
+            if (timerElement) {
+                // Mark timer as countdown mode
+                timerElement.classList.add('countdown-active');
+                
+                // If there was a previous timer for time spent, clear it
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                
+                // Change timer element to show countdown instead of time spent
+                timerElement.textContent = 'Time left: ' + 
+                    (Math.floor(timeLeft / 60) < 10 ? '0' + Math.floor(timeLeft / 60) : Math.floor(timeLeft / 60)) + ':' + 
+                    (timeLeft % 60 < 10 ? '0' + (timeLeft % 60) : timeLeft % 60);
+                
+                // Add warning class for visual emphasis
+                timerElement.classList.add('text-danger', 'fw-bold');
+                
+                countdownTimer = setInterval(function() {
+                    timeLeft--;
+                    
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    
+                    timerElement.textContent = 'Time left: ' + 
+                        (minutes < 10 ? '0' + minutes : minutes) + ':' + 
+                        (seconds < 10 ? '0' + seconds : seconds);
+                    
+                    // Add visual cue when time is running low (less than 1 minute)
+                    if (timeLeft <= 60) {
+                        timerElement.classList.add('blink');
+                    }
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownTimer);
+                        alert('Time is up! Your quiz will be submitted.');
+                        quizForm.submit();
+                    }
+                }, 1000);
+            }
+        } else {
+            // If no time limit, start the regular timer for tracking elapsed time
+            if (document.getElementById('quiz-timer')) {
+                timerInterval = setInterval(updateTimer, 1000);
+                // Initial timer update
+                updateTimer();
+            }
+        }
+
+        // Track textarea changes
+        if (textareas.length) {
+            textareas.forEach(function(textarea, index) {
+                const questionNumber = index + 1;
+                const statusElement = document.getElementById('status-q' + questionNumber);
+                
+                if (statusElement) {
+                    // Check if there's already text in the textarea (e.g. when page loads)
+                    if (textarea.value && textarea.value.trim().length > 0) {
+                        answeredQuestions++;
+                        statusElement.textContent = 'Completed';
+                        statusElement.parentElement.classList.remove('bg-secondary');
+                        statusElement.parentElement.classList.add('bg-success', 'text-white');
+                    }
+                    
+                    textarea.addEventListener('input', function() {
+                        if (this.value && this.value.trim().length > 0) {
+                            if (statusElement.textContent === 'Not started') {
+                                answeredQuestions++;
+                                updateProgress();
+                            }
+                            statusElement.textContent = 'In progress';
+                            statusElement.parentElement.classList.remove('bg-secondary');
+                            statusElement.parentElement.classList.add('bg-warning', 'text-dark');
+                        } else {
+                            if (statusElement.textContent !== 'Not started') {
+                                answeredQuestions--;
+                                updateProgress();
+                            }
+                            statusElement.textContent = 'Not started';
+                            statusElement.parentElement.classList.remove('bg-warning', 'text-dark', 'bg-success', 'text-white');
+                            statusElement.parentElement.classList.add('bg-secondary');
+                        }
+                    });
+
+                    // Mark as completed when field loses focus and has content
+                    textarea.addEventListener('blur', function() {
+                        if (this.value && this.value.trim().length > 0) {
+                            statusElement.textContent = 'Completed';
+                            statusElement.parentElement.classList.remove('bg-warning', 'text-dark');
+                            statusElement.parentElement.classList.add('bg-success', 'text-white');
+                            
+                            // AJAX saving placeholder
+                            console.log('Answer autosaved for question ' + questionNumber);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Update progress on initial page load
+        updateProgress();
+
+        // Form submission event
+        quizForm.addEventListener('submit', function(event) {
+            // Stop all timers when the quiz is submitted
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+            
+            console.log('Quiz submitted');
+            // No preventDefault() here as we want the form to submit normally
+        });
+    }
+});
+</script>
+{% endblock %}

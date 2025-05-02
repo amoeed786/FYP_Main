@@ -1,0 +1,164 @@
+<!-- examigo/templates/examigo/generate_semester_plan.html -->
+{% extends 'examigo/base.html' %}
+
+{% block title %}ExAmigo - Generate Semester Plan{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .card {
+        border-radius: 12px;
+        border: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 1.5rem;
+    }
+    
+    .card:hover {
+        box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+    
+    .card-header {
+        border-radius: 12px 12px 0 0;
+        font-weight: 600;
+    }
+    
+    
+    h2 {
+        color: #333;
+        border-bottom: 2px solid rgba(108, 99, 255, 0.3);
+        padding-bottom: 0.75rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    h2 .emoji-icon {
+        font-size: 1.8rem;
+        margin-right: 12px;
+    }
+    
+    .document-info {
+        background-color: rgba(108, 99, 255, 0.1);
+        border-left: 4px solid #6c63ff;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .document-info .emoji-icon {
+        font-size: 1.4rem;
+        margin-right: 10px;
+        color: #6c63ff;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        font-weight: 500;
+        border-radius: 30px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11);
+        transition: all 0.3s;
+        margin-right: 10px;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1);
+    }
+    
+    .emoji-icon {
+        margin-right: 8px;
+        font-size: 1.2em;
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #ced4da;
+        background-color: rgba(255, 255, 255, 0.8);
+        transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+        background-color: #fff;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-text {
+        color: #6c757d;
+        font-style: italic;
+        font-size: 0.85rem;
+    }
+    
+   
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><span class="emoji-icon">🔮</span>Generate Semester Plan</h2>
+    
+    <div class="document-info">
+        <span class="emoji-icon">📄</span>
+        <p class="mb-0">Using document: <strong>{{ document.title }}</strong></p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="course_title" class="form-label"><span class="emoji-icon">📚</span>Course Title</label>
+            <input type="text" class="form-control" id="course_title" name="course_title" 
+                   value="{{ document.title|title|default:'' }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="num_weeks" class="form-label"><span class="emoji-icon">🗓️</span>Number of Weeks</label>
+            <input type="number" class="form-control" id="num_weeks" name="num_weeks" 
+                   value="12" min="1" max="20" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="start_date" class="form-label"><span class="emoji-icon">📅</span>Start Date</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" 
+                   value="{{ default_start_date }}" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="notes" class="form-label"><span class="emoji-icon">📝</span>Additional Notes (Optional)</label>
+            <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
+            <small class="form-text text-muted">Add any specific requirements or focuses for this semester plan.</small>
+        </div>
+        
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">
+                <span class="emoji-icon"></span>Generate Semester Plan
+            </button>
+            <a href="{% url 'document_for_teacher' document.id %}" class="btn btn-secondary">
+                <span class="emoji-icon"></span>Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
