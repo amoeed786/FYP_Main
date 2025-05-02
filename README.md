@@ -2,7 +2,7 @@
 
 # 🎓 ExAmigo
 
-Welcome to **QuizCraft**, an intelligent web-based classroom application designed to transform exam preparation with smart, procedurally generated quizzes. Whether you're a student preparing for MDCAT or a teacher organizing practice material for theoretical computer science courses — QuizCraft has you covered.
+Welcome to **ExAmigo**, an intelligent web-based application designed to transform exam preparation with smart, procedurally generated quizzes.
 
 ---
 
@@ -20,7 +20,7 @@ Welcome to **QuizCraft**, an intelligent web-based classroom application designe
   Subjective evaluation is **optional** and can be reviewed manually.
 
 - 📚 **Exam Focused Content**  
-  - Covers **Computer Science** (theoretical subjects only)
+  - Covers **theoretical subjects** only
 
 - 🎨 **Aesthetic UI**  
   - Soft color palette  
@@ -34,6 +34,18 @@ Welcome to **QuizCraft**, an intelligent web-based classroom application designe
 ---
 
 ## 🗂️ Project Structure
+
+examigo/
+├── core/
+├── db.sqlite3
+├── db.sqlite3.bak
+├── Dockerfile
+├── docker-compose.yml
+├── examigo/
+├── manage.py
+├── media/
+├── requirements.txt
+└── requirements-2.txt
 
 
 
